@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LWC 30-Day Mastery Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --card: #1a1a26;
+    --border: #2a2a3d;
+    --accent: #00d4ff;
+    --accent2: #7b61ff;
+    --accent3: #ff6b6b;
+    --gold: #ffd166;
+    --green: #06d6a0;
+    --text: #e8e8f0;
+    --muted: #6b6b8a;
+    --week1: #00d4ff;
+    --week2: #7b61ff;
+    --week3: #ff6b6b;
+    --week4: #06d6a0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* BG grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero {
+    position: relative;
+    padding: 60px 40px 40px;
+    text-align: center;
+    z-index: 1;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border: 1px solid var(--accent);
+    padding: 6px 16px;
+    border-radius: 2px;
+    margin-bottom: 24px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .hero h1 span {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    margin-top: 16px;
+    color: var(--muted);
+    font-size: 14px;
+    letter-spacing: 1px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin: 40px auto;
+    max-width: 700px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    animation: fadeUp 0.6s 0.3s ease both;
+    position: relative;
+    z-index: 1;
+  }
+
+  .stat {
+    flex: 1;
+    padding: 20px 16px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .stat:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent);
+    display: block;
+  }
+  .stat-label {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Progress */
+  .progress-wrap {
+    max-width: 900px;
+    margin: 0 auto 40px;
+    padding: 0 40px;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.6s 0.35s ease both;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .progress-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 3px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  /* Week nav */
+  .week-nav {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 0 auto 40px;
+    padding: 0 40px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  .week-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 24px;
+    border-radius: 2px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+
+  .week-btn:hover { color: var(--text); border-color: var(--muted); }
+  .week-btn.active { color: var(--bg); }
+  .week-btn[data-week="1"].active { background: var(--week1); border-color: var(--week1); }
+  .week-btn[data-week="2"].active { background: var(--week2); border-color: var(--week2); }
+  .week-btn[data-week="3"].active { background: var(--week3); border-color: var(--week3); }
+  .week-btn[data-week="4"].active { background: var(--week4); border-color: var(--week4); }
+  .week-btn[data-week="all"].active { background: var(--accent2); border-color: var(--accent2); }
+
+  /* Main layout */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .week-section { margin-bottom: 60px; }
+
+  .week-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .week-number {
+    font-family: 'Syne', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1;
+    opacity: 0.15;
+  }
+
+  .week-info h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .week-info p {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  .week-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Days grid */
+  .days-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+
+  /* Day card */
+  .day-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+  }
+
+  .day-card:hover {
+    border-color: var(--muted);
+    transform: translateY(-2px);
+  }
+
+  .day-card.done { opacity: 0.6; }
+  .day-card.done .day-header { text-decoration: line-through; text-decoration-color: var(--muted); }
+
+  .day-card-accent {
+    height: 3px;
+    width: 100%;
+  }
+
+  .day-header {
+    padding: 16px 20px 12px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .day-num-badge {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+
+  .day-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.3;
+    flex: 1;
+  }
+
+  .done-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    color: transparent;
+    font-size: 11px;
+  }
+
+  .done-btn:hover { border-color: var(--green); }
+  .day-card.done .done-btn {
+    background: var(--green);
+    border-color: var(--green);
+    color: var(--bg);
+  }
+
+  /* Expandable content */
+  .day-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+
+  .day-body.open { max-height: 800px; }
+
+  .day-body-inner {
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--border);
+    margin-top: 0;
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 16px 0 8px;
+  }
+
+  .topic-list {
+    list-style: none;
+  }
+
+  .topic-list li {
+    font-size: 12px;
+    color: var(--text);
+    padding: 5px 0;
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .topic-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 11px;
+  }
+
+  .practice-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: 2px;
+    padding: 12px 14px;
+    margin-top: 12px;
+  }
+
+  .practice-box .label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .practice-box p {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .gain-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .gain-tag {
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 2px;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.2);
+    color: var(--accent);
+    letter-spacing: 0.5px;
+  }
+
+  .resource-link {
+    display: inline-block;
+    font-size: 11px;
+    color: var(--accent2);
+    text-decoration: none;
+    margin-top: 4px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .resource-link:hover { border-color: var(--accent2); }
+
+  /* Daily routine box */
+  .routine-banner {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px 28px;
+    margin-bottom: 40px;
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    animation: fadeUp 0.6s 0.45s ease both;
+  }
+
+  .routine-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .routine-time {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  .routine-desc {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    max-width: 120px;
+    line-height: 1.5;
+  }
+
+  .routine-divider {
+    width: 1px;
+    height: 40px;
+    background: var(--border);
+    align-self: center;
+  }
+
+  /* Hidden week sections */
+  .week-section { display: block; }
+  .week-section.hidden { display: none; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .hero { padding: 40px 20px 30px; }
+    .main { padding: 0 20px 60px; }
+    .stats-bar { margin: 30px 20px; }
+    .progress-wrap { padding: 0 20px; }
+    .week-nav { padding: 0 20px; }
+    .days-grid { grid-template-columns: 1fr; }
+    .routine-banner { margin: 0 20px 30px; }
+  }
+
+  .capstone-card {
+    background: linear-gradient(135deg, rgba(123,97,255,0.1), rgba(0,212,255,0.1));
+    border: 1px solid var(--accent2);
+  }
+
+  .completion-banner {
+    text-align: center;
+    padding: 60px 40px;
+    position: relative;
+    z-index: 1;
+    display: none;
+  }
+
+  .completion-banner.show { display: block; }
+
+  .completion-banner h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">⚡ Your Path to 8/10 Confidence</div>
+  <h1>LWC <span>30-Day</span><br/>Mastery Plan</h1>
+  <p class="hero-sub">Lightning Web Components + Apex · Track every day · Build real things</p>
+</div>
+
+<div class="stats-bar">
+  <div class="stat">
+    <span class="stat-num" id="total-days">30</span>
+    <span class="stat-label">Total Days</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num" id="done-count">0</span>
+    <span class="stat-label">Completed</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num" id="remain-count">30</span>
+    <span class="stat-label">Remaining</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num" id="pct">0%</span>
+    <span class="stat-label">Progress</span>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span>OVERALL PROGRESS</span>
+    <span id="pct-label">0 / 30 days</span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+
+<div class="routine-banner">
+  <div class="routine-item">
+    <span class="routine-time">30m</span>
+    <span class="routine-desc">Read / watch concept</span>
+  </div>
+  <div class="routine-divider"></div>
+  <div class="routine-item">
+    <span class="routine-time">60m</span>
+    <span class="routine-desc">Build practice component</span>
+  </div>
+  <div class="routine-divider"></div>
+  <div class="routine-item">
+    <span class="routine-time">15m</span>
+    <span class="routine-desc">Review Trailhead module</span>
+  </div>
+  <div class="routine-divider"></div>
+  <div class="routine-item">
+    <span class="routine-time">~2h</span>
+    <span class="routine-desc">Total daily time</span>
+  </div>
+</div>
+
+<div class="week-nav">
+  <button class="week-btn active" data-week="all">All Weeks</button>
+  <button class="week-btn" data-week="1">Week 1 · Foundations</button>
+  <button class="week-btn" data-week="2">Week 2 · Apex</button>
+  <button class="week-btn" data-week="3">Week 3 · UI Patterns</button>
+  <button class="week-btn" data-week="4">Week 4 · Advanced</button>
+</div>
+
+<div class="main" id="main-content"></div>
+
+<script>
+const weeks = [
+  {
+    week: 1,
+    title: "Foundations",
+    goal: "Understand the LWC mental model and file structure",
+    color: "#00d4ff",
+    days: [
+      {
+        day: 1,
+        title: "LWC Architecture Basics",
+        topics: [
+          "How LWC differs from Aura components",
+          "File structure: .html, .js, .js-meta.xml, .css",
+          "Shadow DOM concept and why it matters",
+          "How LWC renders and what the component lifecycle looks like"
+        ],
+        practice: "Set up VS Code with Salesforce Extensions Pack. Create a 'Hello World' LWC and deploy it to a Developer Org or Scratch Org.",
+        gains: ["VS Code Setup", "Org Connection", "First Deployment"],
+        resources: [
+          { label: "LWC Dev Guide", url: "https://developer.salesforce.com/docs/component-library/documentation/en/lwc" },
+          { label: "Trailhead: LWC Basics", url: "https://trailhead.salesforce.com/content/learn/modules/lightning-web-components-basics" }
+        ]
+      },
+      {
+        day: 2,
+        title: "HTML Templates & Directives",
+        topics: [
+          "LWC HTML template syntax",
+          "if:true / if:false conditional rendering",
+          "for:each and iterator directives",
+          "key attribute and why it's critical for lists"
+        ],
+        practice: "Build a simple Task List LWC — hardcode 5 tasks in JS and render them using for:each in the template.",
+        gains: ["Template Syntax", "Conditional Rendering", "List Rendering"],
+        resources: [
+          { label: "Template Directives", url: "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.reference_directives" }
+        ]
+      },
+      {
+        day: 3,
+        title: "Data Binding & @api Decorator",
+        topics: [
+          "@api decorator — exposing properties to parent",
+          "One-way data binding (parent → child)",
+          "Property vs attribute in LWC",
+          "Getter/setter patterns with @api"
+        ],
+        practice: "Build a ProductCard LWC that accepts `name`, `price`, `stock` via @api. Use it inside a parent component.",
+        gains: ["@api Decorator", "Parent-Child Props", "Data Binding"],
+        resources: [
+          { label: "LWC Recipes - Wire & API", url: "https://github.com/trailheadapps/lwc-recipes" }
+        ]
+      },
+      {
+        day: 4,
+        title: "@track & Reactive Properties",
+        topics: [
+          "@track decorator and when to use it",
+          "How reactivity works in LWC (auto-tracking in modern LWC)",
+          "Primitive vs object/array reactivity",
+          "Spreading objects to trigger re-renders"
+        ],
+        practice: "Build a shopping cart that adds/removes items. Watch how @track and object mutation behave differently.",
+        gains: ["@track Decorator", "Reactivity Model", "State Management"],
+        resources: [
+          { label: "Reactive Properties", url: "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.reactivity" }
+        ]
+      },
+      {
+        day: 5,
+        title: "Events — Child to Parent",
+        topics: [
+          "CustomEvent API in LWC",
+          "dispatchEvent() — bubbling vs non-bubbling",
+          "Handling events in parent with template listeners",
+          "Passing data with event.detail"
+        ],
+        practice: "Build a Rating component (1-5 stars). When user clicks a star, fire a custom event. Parent listens and displays the selected rating.",
+        gains: ["CustomEvent", "dispatchEvent", "Event Data Passing"],
+        resources: [
+          { label: "Events Guide", url: "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.events_create_dispatch" }
+        ]
+      },
+      {
+        day: 6,
+        title: "Lifecycle Hooks",
+        topics: [
+          "connectedCallback() — component mounted",
+          "disconnectedCallback() — component removed",
+          "renderedCallback() — after each render",
+          "constructor() — before rendering",
+          "Common mistakes with lifecycle hooks"
+        ],
+        practice: "Build a Timer component. Start counting seconds in connectedCallback. Stop it in disconnectedCallback. Log each render in renderedCallback.",
+        gains: ["Lifecycle Hooks", "Side Effects", "Memory Leak Prevention"],
+        resources: [
+          { label: "Lifecycle Hooks Doc", url: "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.reference_lifecycle_hooks" }
+        ]
+      },
+      {
+        day: 7,
+        title: "Week 1 Mini Project",
+        topics: [
+          "Combine everything from Days 1-6",
+          "Plan component tree before coding",
+          "Apply proper file structure",
+          "Test in org and debug any issues"
+        ],
+        practice: "Build a Contact Form LWC — input fields (Name, Email, Phone), client-side validation, show/hide error messages conditionally, submit button fires a custom event with form data to parent.",
+        gains: ["Component Architecture", "Validation Logic", "Event Communication"],
+        resources: []
+      }
+    ]
+  },
+  {
+    week: 2,
+    title: "Apex Integration",
+    goal: "Connect your LWC components to real Salesforce data",
+    color: "#7b61ff",
+    days: [
+      {
+        day: 8,
+        title: "Apex Fundamentals for LWC",
+        topics: [
+          "@AuraEnabled annotation — making Apex callable",
+          "@AuraEnabled(cacheable=true) — when and why",
+          "SOQL basics: SELECT, WHERE, LIMIT, ORDER BY",
+          "Governor Limits you must know",
+          "Apex return types: List, Map, custom wrappers"
+        ],
+        practice: "Write an Apex class `ContactController` with a method that returns a list of 10 Contacts. Test it in Anonymous Apex first.",
+        gains: ["@AuraEnabled", "SOQL Queries", "Governor Limits"],
+        resources: [
+          { label: "Apex Dev Guide", url: "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/" }
+        ]
+      },
+      {
+        day: 9,
+        title: "Apex Exception Handling & Wrappers",
+        topics: [
+          "try-catch in Apex — throwing AuraHandledException",
+          "Custom wrapper classes for structured data",
+          "Returning complex objects to LWC",
+          "NULL handling in Apex"
+        ],
+        practice: "Create a wrapper class `ContactWrapper` with Name + AccountName. Return a List<ContactWrapper> from Apex. Handle potential SOQL errors with AuraHandledException.",
+        gains: ["Error Handling", "Wrapper Classes", "Safe Apex Patterns"],
+        resources: []
+      },
+      {
+        day: 10,
+        title: "@wire Service — Basics",
+        topics: [
+          "What @wire does and when to use it",
+          "Wire adapters: getRecord, getFieldValue, getObjectInfo",
+          "Destructuring { data, error } from wire",
+          "Template display with wire loading states"
+        ],
+        practice: "Build an Account Detail LWC. Use @wire getRecord to display Name, Industry, Phone from a hardcoded Account ID. Show a spinner while loading.",
+        gains: ["@wire Decorator", "getRecord", "Loading States"],
+        resources: [
+          { label: "Wire Service Docs", url: "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.data_wire_service_about" }
+        ]
+      },
+      {
+        day: 11,
+        title: "@wire with Apex Methods",
+        topics: [
+          "Wiring an Apex method directly in LWC",
+          "Passing parameters to wired Apex",
+          "Reactive wire parameters using $variable",
+          "Difference between wire result and imperative result"
+        ],
+        practice: "Wire your ContactController method. Add a filter input — wire should re-fire when user types a search string (use reactive $searchTerm variable).",
+        gains: ["Wire + Apex", "Reactive Parameters", "Auto-refresh Pattern"],
+        resources: []
+      },
+      {
+        day: 12,
+        title: "Imperative Apex Calls",
+        topics: [
+          "When to use imperative over @wire",
+          "Importing and calling Apex methods in JS",
+          "Promise .then().catch() pattern",
+          "async/await pattern with try-catch",
+          "Showing loading spinner during async calls"
+        ],
+        practice: "Build a Contact Search — user types a name, clicks Search button, JS calls Apex imperatively and renders results in a list.",
+        gains: ["Imperative Apex", "async/await", "User-Triggered Calls"],
+        resources: []
+      },
+      {
+        day: 13,
+        title: "DML from LWC — Insert / Update",
+        topics: [
+          "Calling Apex DML from LWC (create/update records)",
+          "Passing sObject data from LWC to Apex",
+          "refreshApex() — refreshing wired data after DML",
+          "Using getRecordNotifyChange for cache updates"
+        ],
+        practice: "Add a 'Create Contact' button to your search component. User fills a mini form, clicks save — Apex inserts the record. Wire list refreshes automatically.",
+        gains: ["DML Operations", "refreshApex", "Cache Invalidation"],
+        resources: []
+      },
+      {
+        day: 14,
+        title: "Week 2 Mini Project",
+        topics: [
+          "Combine wire + imperative + DML",
+          "Proper loading and error state handling",
+          "Clean Apex with exception handling"
+        ],
+        practice: "Build a Lead Lookup Dashboard — search Leads by name (imperative), display detail on click (wire getRecord), button to convert Lead status (DML). Full error handling with user-visible messages.",
+        gains: ["Full CRUD Flow", "Error UX", "Wire + Imperative Together"],
+        resources: []
+      }
+    ]
+  },
+  {
+    week: 3,
+    title: "UI Patterns",
+    goal: "Build real-world quality, professional Salesforce UI",
+    color: "#ff6b6b",
+    days: [
+      {
+        day: 15,
+        title: "SLDS Grid & Layout",
+        topics: [
+          "Salesforce Lightning Design System (SLDS) overview",
+          "slds-grid, slds-col, slds-size classes",
+          "slds-m-* and slds-p-* utility spacing",
+          "Responsive grid: small/medium/large breakpoints"
+        ],
+        practice: "Rebuild your ContactCard from Week 1 using proper SLDS grid layout. Make it look like a real Salesforce component.",
+        gains: ["SLDS Grid", "Responsive Layout", "Utility Classes"],
+        resources: [
+          { label: "SLDS Grid Docs", url: "https://www.lightningdesignsystem.com/utilities/grid/" }
+        ]
+      },
+      {
+        day: 16,
+        title: "Base Lightning Components",
+        topics: [
+          "lightning-card, lightning-badge, lightning-icon",
+          "lightning-input types: text, number, date, checkbox, combobox",
+          "lightning-button variants: brand, neutral, destructive",
+          "lightning-spinner and loading patterns"
+        ],
+        practice: "Recreate your contact form using only Base Lightning Components. No raw HTML inputs — use lightning-input everywhere.",
+        gains: ["Base Components", "lightning-input", "lightning-button"],
+        resources: [
+          { label: "Component Library", url: "https://developer.salesforce.com/docs/component-library/overview/components" }
+        ]
+      },
+      {
+        day: 17,
+        title: "lightning-datatable",
+        topics: [
+          "lightning-datatable columns definition",
+          "Sorting: onsort event and data re-sorting",
+          "Row actions: actions column + onrowaction",
+          "Inline edit and onsave",
+          "selectedRows and row selection"
+        ],
+        practice: "Build an Account List with lightning-datatable — sortable Name/Industry/Revenue columns, row actions (View, Edit, Delete), multi-select enabled.",
+        gains: ["lightning-datatable", "Sorting", "Row Actions"],
+        resources: []
+      },
+      {
+        day: 18,
+        title: "Custom Datatable Patterns",
+        topics: [
+          "Custom data types in datatable (custom cellAttributes)",
+          "Pagination pattern for large datasets",
+          "Search + filter + datatable combo",
+          "Export to CSV from datatable data"
+        ],
+        practice: "Add pagination (Previous/Next, 10 rows/page) and a search input to yesterday's Account datatable. All filtering done in JS — no extra Apex calls.",
+        gains: ["Pagination", "Client-side Filter", "Custom Columns"],
+        resources: []
+      },
+      {
+        day: 19,
+        title: "Record Forms",
+        topics: [
+          "lightning-record-form — quickest form for read/edit",
+          "lightning-record-edit-form — full custom layout",
+          "lightning-record-view-form — read-only display",
+          "lightning-output-field and lightning-input-field",
+          "When to use which form type"
+        ],
+        practice: "Build a Contact Manager — view form for display, click Edit to switch to edit form. All using lightning-record-*-form components.",
+        gains: ["Record Forms", "View vs Edit", "Field Components"],
+        resources: []
+      },
+      {
+        day: 20,
+        title: "Toast Notifications & UX",
+        topics: [
+          "ShowToastEvent — success, error, warning, info variants",
+          "Sticky vs auto-dismiss toasts",
+          "Confirmation dialogs with lightning-confirm",
+          "Empty states and placeholder UI patterns"
+        ],
+        practice: "Add full toast feedback to your Contact Manager — success on save, error on failure, warning before delete. Add an empty state illustration when no results.",
+        gains: ["ShowToastEvent", "UX Feedback", "Error Messaging"],
+        resources: []
+      },
+      {
+        day: 21,
+        title: "Week 3 Mini Project",
+        topics: [
+          "Full UI polish with SLDS",
+          "Data table + record forms together",
+          "Toast notifications on all actions"
+        ],
+        practice: "Build an Opportunity Manager — datatable list of Opportunities, click a row to open edit form in a panel, save with toast, delete with confirmation. Fully polished SLDS UI.",
+        gains: ["Professional UI", "Full Component Flow", "Complete UX"],
+        resources: []
+      }
+    ]
+  },
+  {
+    week: 4,
+    title: "Advanced Concepts",
+    goal: "Senior-level LWC patterns — production ready",
+    color: "#06d6a0",
+    days: [
+      {
+        day: 22,
+        title: "Lightning Message Service (LMS)",
+        topics: [
+          "Why LMS exists — cross-component communication",
+          "Creating a MessageChannel .messageChannel-meta.xml",
+          "publish() from one component",
+          "subscribe() in another unrelated component",
+          "Unsubscribing in disconnectedCallback"
+        ],
+        practice: "Build two unrelated components on the same App Page: a Sidebar Filter and a Main List. Filter publishes via LMS; List subscribes and updates its results.",
+        gains: ["LMS", "Cross-Component Comm", "MessageChannel"],
+        resources: [
+          { label: "LMS Docs", url: "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.use_message_channel" }
+        ]
+      },
+      {
+        day: 23,
+        title: "NavigationMixin",
+        topics: [
+          "NavigationMixin.Navigate() — navigate to records, pages, URLs",
+          "Navigate to a Record, Object Home, Named Page",
+          "Navigate to an external URL",
+          "NavigationMixin.GenerateUrl() for hyperlinks"
+        ],
+        practice: "Add navigation to your Opportunity Manager — row click navigates to the Opportunity record page. Add a button to navigate to Create New Opportunity.",
+        gains: ["NavigationMixin", "Record Navigation", "Page References"],
+        resources: []
+      },
+      {
+        day: 24,
+        title: "App Builder Configuration",
+        topics: [
+          "Exposing @api properties in App Builder (targetConfigs)",
+          "targets in .js-meta.xml — App Page, Record Page, Home",
+          "Making components drag-and-drop configurable",
+          "Dynamic component behavior from Admin settings"
+        ],
+        practice: "Make your Opportunity Manager configurable — Admin can set 'Title', 'Rows Per Page', and 'Show Revenue Column' from App Builder without code changes.",
+        gains: ["App Builder", "targetConfigs", "Admin Configurable"],
+        resources: []
+      },
+      {
+        day: 25,
+        title: "Error Handling & Debugging",
+        topics: [
+          "reduceErrors utility function pattern",
+          "Displaying multiple errors cleanly in UI",
+          "Chrome DevTools for LWC debugging",
+          "Salesforce Inspector Chrome extension",
+          "console.log tips in LWC",
+          "VS Code debugger with Salesforce extensions"
+        ],
+        practice: "Go back to any Week 2 component. Add production-grade error handling using reduceErrors. Intentionally break Apex and verify errors show correctly to the user.",
+        gains: ["reduceErrors", "Error Display", "Debugging Skills"],
+        resources: [
+          { label: "LWC Recipes reduceErrors", url: "https://github.com/trailheadapps/lwc-recipes/blob/main/force-app/main/default/lwc/errorPanel/errorPanel.js" }
+        ]
+      },
+      {
+        day: 26,
+        title: "Performance Best Practices",
+        topics: [
+          "Conditional rendering vs CSS display:none — when to use each",
+          "Lazy loading child components",
+          "Avoiding unnecessary re-renders",
+          "Memoization: caching computed results in JS",
+          "Avoiding SOQL inside loops in Apex"
+        ],
+        practice: "Audit your Week 3 Opportunity Manager. Identify any render or Apex performance issues. Apply lazy loading to the edit form panel.",
+        gains: ["Performance", "Lazy Loading", "Re-render Prevention"],
+        resources: []
+      },
+      {
+        day: 27,
+        title: "Security in LWC",
+        topics: [
+          "Lightning Locker vs LWS (Lightning Web Security)",
+          "Why innerHTML is dangerous — XSS risks",
+          "Use lightning-formatted-* components safely",
+          "Field-level security and @AuraEnabled data",
+          "With Sharing vs Without Sharing in Apex"
+        ],
+        practice: "Review all your Apex classes — add 'with sharing' keyword. Replace any raw HTML rendering with safe lightning-formatted-text or lightning-formatted-url.",
+        gains: ["XSS Prevention", "With Sharing", "Secure Patterns"],
+        resources: []
+      },
+      {
+        day: 28,
+        title: "Jest Unit Testing",
+        topics: [
+          "Setting up Jest for LWC (sfdx-lwc-jest)",
+          "Writing your first component test",
+          "Mocking @wire responses in tests",
+          "Mocking Apex imperative calls",
+          "Querying shadow DOM in tests"
+        ],
+        practice: "Write Jest tests for your ContactCard component — test that it renders with correct data, test that @wire mock data displays, test error state rendering.",
+        gains: ["Jest Setup", "@wire Mocking", "Apex Mocking"],
+        resources: [
+          { label: "Jest for LWC", url: "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.unit_testing_using_jest_introduction" }
+        ]
+      },
+      {
+        day: 29,
+        title: "Code Quality & Patterns",
+        topics: [
+          "ESLint rules for LWC (@salesforce/eslint-plugin-lwc)",
+          "Component naming conventions",
+          "Separating concerns: container vs presentation components",
+          "Reusable utility JS modules (lwc/utils)",
+          "Code review checklist for LWC"
+        ],
+        practice: "Refactor your Opportunity Manager — split into a container component (data fetching) and a presentational component (UI only). Add ESLint to your project.",
+        gains: ["ESLint", "Clean Architecture", "Reusable Utilities"],
+        resources: []
+      },
+      {
+        day: 30,
+        title: "🏆 Capstone Project",
+        topics: [
+          "Plan and build a mini CRM Dashboard from scratch",
+          "Account/Contact search with imperative Apex",
+          "Editable record form with toast feedback",
+          "Data table with row actions and sorting",
+          "LMS-based component communication between panels",
+          "NavigationMixin for record links",
+          "Full SLDS styling and error handling",
+          "App Builder configurable title and row count"
+        ],
+        practice: "Build the full mini CRM Dashboard. This single project demonstrates every skill from all 4 weeks. This is what you show your boss as proof of your 8-9/10 confidence.",
+        gains: ["Full LWC Skill", "Production Ready", "Boss-Level Demo", "8-9/10 Confidence"],
+        resources: [
+          { label: "LWC Recipes — Full Reference", url: "https://github.com/trailheadapps/lwc-recipes" },
+          { label: "Trailhead LWC Specialist", url: "https://trailhead.salesforce.com/en/content/learn/trails/build-lightning-web-components" }
+        ]
+      }
+    ]
+  }
+];
+
+// Load completed days from storage
+let completedDays = new Set(JSON.parse(localStorage.getItem('lwc-completed') || '[]'));
+
+function saveCompleted() {
+  localStorage.setItem('lwc-completed', JSON.stringify([...completedDays]));
+}
+
+function updateStats() {
+  const total = 30;
+  const done = completedDays.size;
+  const remain = total - done;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('done-count').textContent = done;
+  document.getElementById('remain-count').textContent = remain;
+  document.getElementById('pct').textContent = pct + '%';
+  document.getElementById('pct-label').textContent = `${done} / ${total} days`;
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+function render() {
+  const container = document.getElementById('main-content');
+  container.innerHTML = '';
+
+  weeks.forEach(week => {
+    const section = document.createElement('div');
+    section.className = 'week-section';
+    section.dataset.week = week.week;
+
+    section.innerHTML = `
+      <div class="week-header">
+        <span class="week-number">W${week.week}</span>
+        <span class="week-dot" style="background:${week.color}"></span>
+        <div class="week-info">
+          <h2 style="color:${week.color}">Week ${week.week} — ${week.title}</h2>
+          <p>Goal: ${week.goal}</p>
+        </div>
+      </div>
+      <div class="days-grid" id="week-${week.week}-grid"></div>
+    `;
+
+    container.appendChild(section);
+
+    const grid = section.querySelector(`#week-${week.week}-grid`);
+
+    week.days.forEach(day => {
+      const card = document.createElement('div');
+      const isDone = completedDays.has(day.day);
+      card.className = 'day-card' + (isDone ? ' done' : '') + (day.day === 30 ? ' capstone-card' : '');
+      card.dataset.day = day.day;
+
+      const resourcesHTML = day.resources.length > 0
+        ? `<div class="section-label">Resources</div>
+           ${day.resources.map(r => `<a class="resource-link" href="${r.url}" target="_blank">↗ ${r.label}</a><br/>`).join('')}`
+        : '';
+
+      card.innerHTML = `
+        <div class="day-card-accent" style="background:${week.color}"></div>
+        <div class="day-header">
+          <span class="day-num-badge">Day ${day.day}</span>
+          <span class="day-title">${day.title}</span>
+          <button class="done-btn" data-day="${day.day}" title="Mark complete">✓</button>
+        </div>
+        <div class="day-body" id="body-${day.day}">
+          <div class="day-body-inner">
+            <div class="section-label">What You Learn</div>
+            <ul class="topic-list">
+              ${day.topics.map(t => `<li>${t}</li>`).join('')}
+            </ul>
+            <div class="practice-box">
+              <span class="label">⚡ Build This</span>
+              <p>${day.practice}</p>
+            </div>
+            <div class="section-label" style="margin-top:16px">What You Gain</div>
+            <div class="gain-box">
+              ${day.gains.map(g => `<span class="gain-tag">${g}</span>`).join('')}
+            </div>
+            ${resourcesHTML}
+          </div>
+        </div>
+      `;
+
+      // Toggle card body
+      card.querySelector('.day-header').addEventListener('click', (e) => {
+        if (e.target.classList.contains('done-btn')) return;
+        const body = card.querySelector('.day-body');
+        body.classList.toggle('open');
+      });
+
+      // Mark done
+      card.querySelector('.done-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        const dayNum = parseInt(e.currentTarget.dataset.day);
+        if (completedDays.has(dayNum)) {
+          completedDays.delete(dayNum);
+          card.classList.remove('done');
+        } else {
+          completedDays.add(dayNum);
+          card.classList.add('done');
+        }
+        saveCompleted();
+        updateStats();
+      });
+
+      grid.appendChild(card);
+    });
+  });
+
+  updateStats();
+}
+
+// Week filter
+document.querySelectorAll('.week-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const w = btn.dataset.week;
+    document.querySelectorAll('.week-section').forEach(section => {
+      if (w === 'all' || section.dataset.week === w) {
+        section.classList.remove('hidden');
+      } else {
+        section.classList.add('hidden');
+      }
+    });
+  });
+});
+
+render();
+</script>
+</body>
+</html>
